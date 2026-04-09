@@ -8,80 +8,50 @@ import numpy as np
 import os 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 filepath = os.path.join(BASE_DIR, "models", "models_summary.csv") 
-# ======================
-# 🔹 Настройка страницы
-# ======================
+
 st.set_page_config(page_title="Churn Prediction", layout="wide")
 
-# ======================
-# 🔹 Загрузка модели
-# ======================
+# 🔹 Завантаження моделі та ознак
 model = joblib.load("models/final_model_LightGBM.joblib")
 feature_names = joblib.load("models/feature_names.joblib")
 
-# ======================
-# 🔹 Предобработка
-# ======================
-# def preprocess_input(input_df: pd.DataFrame, feature_names: list) -> pd.DataFrame:
-#     input_df = input_df.copy()
-
-#     # bool → float
-#     input_df = input_df.astype(float)
-
-#     # добавляем недостающие признаки
-#     for col in feature_names:
-#         if col not in input_df.columns:
-#             input_df[col] = 0
-
-#     return input_df[feature_names]
-
-
-# ======================
-# 🔹 Предсказание
-# ======================
 def manual_prediction(input_data: pd.DataFrame, model, feature_names):
     data = input_data.copy()
 
-    # 🔹 Логарифмирование исходных признаков
+    # 🔹 Логарифмування вихідних ознак
     for col in ["bill_avg", "upload_avg", "download_avg"]:
         if col in data.columns:
             data[f"{col}_log"] = np.log1p(data.pop(col))
 
-    # 🔹 Приведение типов для дискретных признаков
+    # 🔹Приведення типів для дискретних ознак
     int_cols = ["download_over_limit", "service_failure_count", "remaining_contract"]
     for col in int_cols:
         if col in data.columns:
             data[col] = data[col].astype(int)
-
-    # 🔹 Приведение булевых признаков к int
+    # 🔹 Приведення булевих ознак до int
     bool_cols = ["is_movie_package_subscriber", "is_tv_subscriber"]
     for col in bool_cols:
         if col in data.columns:
             data[col] = data[col].astype(int)
-
-    # 🔹 Добавление недостающих признаков
+    # 🔹 Додавання інших ознак
     for col in feature_names:
         if col not in data.columns:
             data[col] = 0
-
-    # 🔹 Упорядочивание признаков
     data = data[feature_names]
-
-    # 🔹 Предсказание
+    # 🔹 Передбачення
     prob = model.predict_proba(data)[:, 1][0]
     label = "🔴 Високий ризик" if prob > 0.5 else "🟢 Низький ризик"
 
-    return prob, label, data  # возвращаем data для рекомендаций
+    return prob, label, data 
 
 def personalized_recommendations(input_data: pd.DataFrame, probability: float):
-
     recs = []
 
-    # 🔵 1. НИЗКИЙ РИСК → НИЧЕГО НЕ ДЕЛАЕМ
+    # 🟢Низький ризик
     if probability < 0.3:
         return ["✅ Профіль клієнта стабільний"]
 
-    # 🟡 2. СРЕДНИЙ РИСК → мягкие действия
+    # Середній ризик
     if 0.3 <= probability < 0.7:
 
         if input_data.get("remaining_contract", [0])[0] < 3:
@@ -89,13 +59,15 @@ def personalized_recommendations(input_data: pd.DataFrame, probability: float):
 
         if input_data.get("service_failure_count", [0])[0] > 1:
             recs.append("🛠 Перевірити якість обслуговування")
-
+            
+        if input_data.get("download_over_limit", [0])[0] > 0:
+            recs.append("📶 Запропонувати інший тариф")
         if not recs:
             recs.append("ℹ️ Спостерігати за клієнтом")
 
         return recs
-
-    # 🔴  ВЫСОКИЙ РИЗИК 
+    
+    # 🔴 Високий ризик
     if probability >= 0.7:
 
         recs.append("🚨 Зв'язатися з клієнтом")
@@ -107,7 +79,7 @@ def personalized_recommendations(input_data: pd.DataFrame, probability: float):
             recs.append("🎁 Запропонувати бонус для утримання")
 
         if input_data.get("remaining_contract", [0])[0] < 3:
-            recs.append("📄 Терміново запропонувати контракт")
+            recs.append("📄 Запропонувати контракт")
 
         if input_data.get("download_over_limit", [0])[0] > 0:
             recs.append("📶 Запропонувати інший тариф")
@@ -122,9 +94,7 @@ def personalized_recommendations(input_data: pd.DataFrame, probability: float):
             recs.append("📺 Запропонувати пакет ТV")
         return recs
 
-# ======================
 # 🔹 Важливість ознак
-# ======================
 def plot_feature_importance(model, feature_names):
     fi = pd.DataFrame({
         "feature": feature_names,
@@ -136,10 +106,7 @@ def plot_feature_importance(model, feature_names):
     plt.title("Top-10 важливих ознак")
     st.pyplot(plt)
 
-
-# ======================
 # 🔹 Аналітика
-# ======================
 def data_analysis_section(df: pd.DataFrame):
     st.subheader("📊 Аналіз даних")
 
@@ -149,11 +116,9 @@ def data_analysis_section(df: pd.DataFrame):
     df_display[numeric_cols] = df_display[numeric_cols].round(7)
 
 
-  # 🔹 Таблиця метрик моделей
     st.markdown("### 📋 Таблиця результатів метрик моделей")
     st.dataframe(df_display, use_container_width=True)
 
-    # target
     if "target" in df.columns:
         plt.figure()
         sns.countplot(x="target", data=df)
@@ -175,25 +140,22 @@ def data_analysis_section(df: pd.DataFrame):
         st.pyplot(plt)
     else:
         st.warning("В файлі відсутні числові ознаки для розрухунку кореляції.")
-   # 🔹 Важность признаков
+
     st.markdown("### ⭐ Топ-10 найбільш важливих ознак")
-    # importance
     plot_feature_importance(model, feature_names)
 
 
-# ======================
+
 # 🔹 UI
-# ======================
+
 st.title("💡 Customer Churn Prediction")
 
 menu = ["🔮 Прогноз", "📊 Аналітика"]
 choice = st.sidebar.selectbox("Меню", menu)
 
 
-# ======================
-# 🔮 ПРОГНОЗ")
+# 🔹 ПРОГНОЗ")
 
-# ======================
 if choice == "🔮 Прогноз":
 
     st.header("💻 Ввід даних клієнта")
@@ -210,19 +172,19 @@ if choice == "🔮 Прогноз":
         if feature in ["bill_avg_log", "upload_avg_log", "download_avg_log"]:
             base_feature = feature.replace("_log", "")
             user_input[base_feature] = st.number_input(base_feature, min_value=0, max_value=100000, value=0)
-            # 🔹 Дискретные int признаки
+            # 🔹 Дискретні ознаки 
         elif feature in ["download_over_limit", "service_failure_count"]:
             user_input[feature] = st.number_input(feature, min_value=0, max_value=20, value=0, step=1)
-             # 🔹 Бинарные признаки
+             # 🔹 Бінарні ознаки
         elif feature in ["is_movie_package_subscriber", "is_tv_subscriber"]:
             user_input[feature] = st.checkbox(feature)
-              # 🔹 Остальные числовые признаки
+              # 🔹 Інші числові ознаки
         else:
             user_input[feature] = st.number_input(feature, min_value=0.0, max_value=100000.0, value=0.0)
 
     input_df = pd.DataFrame([user_input])
 
-    if st.button("🚀 Сделать прогноз"):
+    if st.button("🚀 Зробити прогноз"):
         prob, label, processed_df = manual_prediction(input_df, model, feature_names)
 
         st.success("Прогноз готовий")
@@ -238,7 +200,6 @@ if choice == "🔮 Прогноз":
             st.write(r)
 
 elif choice == "📊 Аналітика":
-
 
     if os.path.exists(filepath):
         df = pd.read_csv(filepath)
