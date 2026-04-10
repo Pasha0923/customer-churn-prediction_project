@@ -1,4 +1,8 @@
+# Docker-версия Python ∈ диапазона requires-python ">=3.11,<3.14"
+# FROM python:3.11-slim Рекомендация (як робити правильно)
 
+# FROM python:3.12
+# FROM python:3.13
 import streamlit as st
 import pandas as pd
 import joblib
