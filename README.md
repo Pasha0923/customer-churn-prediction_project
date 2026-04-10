@@ -75,12 +75,12 @@ customer-churn-prediction_project/
 
 ## ⚡ Інструкція із запуску
 
-1. Склонуйте репозиторій
+1. **Склонуйте репозиторій**
 ```bash
 git clone https://github.com/Pasha0923/customer-churn-prediction_project.git
 cd customer-churn-prediction_project
 ```
-2. Встановления залежностей (poetry or pip):
+2. **Встановления залежностей (poetry or pip):**
 
 using poetry:
 ```bash
@@ -90,13 +90,13 @@ using pip:
 ```bash
 pip install -r requirements.txt
 ```
-3. Запуск Streamlit інтерфейса
+3. **Запуск Streamlit інтерфейса**
 ```bash
 streamlit run app.py
 ```
 У браузері після запуску перейдіть по локальному URL http://localhost:8501/
 
-4. Навігація по інтерфейсу
+4. **Навігація по інтерфейсу**
 
 Аналітика даних – вкладка Аналітика
 
@@ -104,7 +104,7 @@ streamlit run app.py
 
 ## 🏆 Вибір фінальної моделі та її метрик 
 
-В результаті порівняння та оптимізації моделей кращої була обрана **LightGBM**, що продемонструвала найкращі показники якості на тестовому наборі даних.
+В результаті порівняння та оптимізації моделей найкращою була обрана **LightGBM**, яка продемонструвала найкращі показники якості на тестовому наборі даних.
 
 ### 📊 Метрики якості фінальної моделі 
 
@@ -115,3 +115,20 @@ streamlit run app.py
 | Recall     | 0.9414   |
 | F1-score   | 0.9511   |
 | ROC-AUC    | 0.9835   |
+
+## **Контейнеризація:** 
+Проєкт контейнеризовано за допомогою Docker для забезпечення відтворюваності та легкого розгортання.
+
+**Інструкція Запуску Через Docker**
+
+1. Побудова образу Docker:
+```bash
+docker build -t telecom-churn .
+```
+2.  Запуск контейнера:
+```bash
+pass
+```
+📌 **Контакти**
+ - GitHub Repository : https://github.com/Pasha0923/customer-churn-prediction_project
+ - email : pavelsai2309@gmail.com
