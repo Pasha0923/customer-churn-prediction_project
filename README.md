@@ -30,7 +30,8 @@ customer-churn-prediction_project/
 ├─ app.py       # файл Streamlit застосунку
 ├─ .gitignore   # файл ігнорування Git
 ├─ requirements.txt # залежності проекта
-└─ README.md    # опис проєкту
+├─ pyproject.toml # кофігурація проекту 
+└─ README.md    # документація проєкту
 ```
 ## 🛠 Етапи реалізації
 1. **EDA**:
@@ -129,6 +130,6 @@ docker build -t telecom-churn .
 ```bash
 pass
 ```
-📌 **Контакти**
+## 📌 **Контакти**
  - GitHub Repository : https://github.com/Pasha0923/customer-churn-prediction_project
  - email : pavelsai2309@gmail.com
