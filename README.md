@@ -55,3 +55,61 @@ customer-churn-prediction_project/
    - Ручне прогнозування з персоналізованими рекомендаціями щодо утримання
    - інтерактивна аналітика (Feature Importance, кореляція між метриками , таблиця результатів метрик моделей )
    - Візуалізація результатів прогнозування
+
+## Бібліотеки 
+
+ Python 3.11 – 3.13
+ Poetry (для управління залежностями)
+
+- numpy
+- pandas
+- scikit-learn
+- xgboost
+- lightgbm
+- catboost
+- matplotlib
+- seaborn
+- streamlit
+
+
+## ⚡ Інструкція із запуску
+
+1. Склонуйте репозиторій
+```bash
+git clone https://github.com/Pasha0923/customer-churn-prediction_project.git
+cd customer-churn-prediction_project
+```
+2. Встановления залежностей (poetry or pip):
+
+using poetry:
+```bash
+poetry install
+```
+using pip:
+```bash
+pip install -r requirements.txt
+```
+3. Запуск Streamlit інтерфейса
+```bash
+streamlit run app.py
+```
+У браузері після запуску перейдіть по локальному URL http://localhost:8501/
+
+4. Навігація по інтерфейсу
+
+Аналітика даних – вкладка Аналітика
+Ручне прогнозування – вкладка Прогноз
+
+## 🏆 Вибір фінальної моделі та її метрик 
+
+В результаті порівняння та оптимізації моделей кращої була обрана **LightGBM**, що продемонструвала найкращі показники якості на тестовому наборі даних.
+
+### 📊 Метрики якості фінальної моделі 
+
+| Метрика    | Значення |
+|------------|----------|
+| Accuracy   | 0.9460   |
+| Precision  | 0.9609   |
+| Recall     | 0.9414   |
+| F1-score   | 0.9511   |
+| ROC-AUC    | 0.9835   |
