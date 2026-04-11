@@ -4,19 +4,22 @@ FROM python:3.11-slim
 # Встановимо робочу директорію всередині контейнера
 WORKDIR /app
 
-# Встановлюємо  poetry всередині контейнера
-RUN pip install poetry
-
-# Копіюємо файли конфігурації і встановлюємо залежності poetry  
-COPY pyproject.toml poetry.lock* ./
-
-RUN poetry config virtualenvs.create false \
-    && poetry install --only main --no-interaction --no-ansi
+# Встановлюємо системні залежності
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
  # Копіюємо файли проєкту
+COPY requirements.txt .
 COPY app.py .
 COPY models ./models
 COPY data ./data
+
+# Встановлюємо залежності
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Відкриваємо порт Streamlit
 EXPOSE 8501

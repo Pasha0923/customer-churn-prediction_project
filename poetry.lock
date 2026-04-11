@@ -2676,10 +2676,7 @@ plotting = ["graphviz", "matplotlib"]
 pyspark = ["cloudpickle", "pyspark (>=3.4)", "scikit-learn"]
 scikit-learn = ["scikit-learn"]
 
-[extras]
-models = ["catboost"]
-
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "155fc9d6e5f766fa770dc79955f4aecc5cbcb04817b3b4d2a9479d9234f6ba1d"
+content-hash = "3c9e33514086740dbb7a4e65ffcd2c86ca80498a0e1c56e0640c298cad219511"
