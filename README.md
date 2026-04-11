@@ -122,17 +122,22 @@ streamlit run app.py
 
 Проєкт контейнеризовано за допомогою Docker для забезпечення відтворюваності та розгортання.
 
-**Інструкція Запуску Через Docker**
+## **Інструкція Запуску Через Docker**
 
-1. Побудова образу Docker:
+1. **Склонуйте репозиторій**
+```bash
+git clone https://github.com/Pasha0923/customer-churn-prediction_project.git
+cd customer-churn-prediction_project
+```
+2. **Побудова образу Docker:**
 ```bash
 docker build -t churn-prediction-app .
 ```
-2.  Запуск контейнера:
+3.  **Запуск контейнера:**
 ```bash
 docker run -p 8501:8501 churn-prediction-app
 ```
-3. Відкриття застосунку:
+4. **Відкриття застосунку:**
 Перейдіть в браузері за посиланням http://localhost:8501
 
 ## 📌 **Контакти**
