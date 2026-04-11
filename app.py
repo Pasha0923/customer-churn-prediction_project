@@ -1,8 +1,3 @@
-# Docker-версия Python ∈ диапазона requires-python ">=3.11,<3.14"
-# FROM python:3.11-slim Рекомендация (як робити правильно)
-
-# FROM python:3.12
-# FROM python:3.13
 import streamlit as st
 import pandas as pd
 import joblib
@@ -10,14 +5,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-filepath = os.path.join(BASE_DIR, "models", "models_summary.csv") 
+MODEL_PATH = os.path.join(BASE_DIR, "models", "final_model_LightGBM.joblib") 
+FILE_PATH = os.path.join(BASE_DIR, "models", "models_summary.csv")  
+FEATURES_PATH = os.path.join(BASE_DIR, "models", "feature_names.joblib")
 
 st.set_page_config(page_title="Churn Prediction", layout="wide")
 
 # 🔹 Завантаження моделі та ознак
-model = joblib.load("models/final_model_LightGBM.joblib")
-feature_names = joblib.load("models/feature_names.joblib")
+model = joblib.load(MODEL_PATH)
+feature_names = joblib.load(FEATURES_PATH)
 
 def manual_prediction(input_data: pd.DataFrame, model, feature_names):
     data = input_data.copy()
@@ -148,31 +146,23 @@ def data_analysis_section(df: pd.DataFrame):
     st.markdown("### ⭐ Топ-10 найбільш важливих ознак")
     plot_feature_importance(model, feature_names)
 
-
-
 # 🔹 UI
 
 st.title("💡 Customer Churn Prediction")
-
 menu = ["🔮 Прогноз", "📊 Аналітика"]
 choice = st.sidebar.selectbox("Меню", menu)
 
-
-# 🔹 ПРОГНОЗ")
-
+# 🔹 Прогноз")
 if choice == "🔮 Прогноз":
 
     st.header("💻 Ввід даних клієнта")
-
     col1, col2 = st.columns(2)
-
     user_input = {}
-
     for feature in feature_names:
 
         if feature == "no_contract":
             continue
-        # Логарифмовані ознаки (вводимо звичайні значення)
+        # Логарифмовані ознаки 
         if feature in ["bill_avg_log", "upload_avg_log", "download_avg_log"]:
             base_feature = feature.replace("_log", "")
             user_input[base_feature] = st.number_input(base_feature, min_value=0, max_value=100000, value=0)
@@ -194,7 +184,7 @@ if choice == "🔮 Прогноз":
         st.success("Прогноз готовий")
 
         c1, c2 = st.columns(2)
-        c1.metric("Вірогідність", f"{prob:.2%}")
+        c1.metric("Вірогідність відтоку", f"{prob:.2%}")
         c2.metric("", label)
 
         st.subheader("📌 Рекомендації")
@@ -205,12 +195,12 @@ if choice == "🔮 Прогноз":
 
 elif choice == "📊 Аналітика":
 
-    if os.path.exists(filepath):
-        df = pd.read_csv(filepath)
+    if os.path.exists(FILE_PATH):
+        df = pd.read_csv(FILE_PATH)
         st.info(f"Файл моделей успішно завантажений ")
         data_analysis_section(df)
     else:
-        st.warning(f"Файл {os.path.basename(filepath)} не знайден. Завантажте файл.")
+        st.warning(f"Файл {os.path.basename(FILE_PATH)} не знайден. Завантажте файл.")
         uploaded_file = st.file_uploader("Завантажте CSV", type=["csv"])
         if uploaded_file:
             df = pd.read_csv(uploaded_file)
