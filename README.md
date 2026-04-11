@@ -19,19 +19,20 @@
 customer-churn-prediction_project/
 │
 ├─ data/
-│ ├─ processed/ # передоброблені дані
-│ └─ raw/       # вихідні дані
+│ ├─ processed/   # файл передоброблених даних
+│ └─ raw/         # файл вихідних даних
 │
-├─ models/      # Збережені навчені моделі
+├─ models/        # збережені навчені моделі
 │ 
-├─ notebooks/   # ноутбук для аналізу та навчання
+├─ notebooks/     # ноутбук для аналізу та навчання
 │ └─ internet_churn_project.ipynb 
 │
-├─ app.py       # файл Streamlit застосунку
-├─ .gitignore   # файл ігнорування Git
+├─ app.py         # файл Streamlit застосунку
+├─ .gitignore     # файл ігнорування git
+├─ Dockerfile     # контейнеризація
 ├─ requirements.txt # залежності проекта
 ├─ pyproject.toml # кофігурація проекту 
-└─ README.md    # документація проєкту
+└─ README.md      # документація проєкту
 ```
 ## 🛠 Етапи реалізації
 1. **EDA**:
@@ -118,18 +119,22 @@ streamlit run app.py
 | ROC-AUC    | 0.9835   |
 
 ## **Контейнеризація:** 
-Проєкт контейнеризовано за допомогою Docker для забезпечення відтворюваності та легкого розгортання.
+
+Проєкт контейнеризовано за допомогою Docker для забезпечення відтворюваності та розгортання.
 
 **Інструкція Запуску Через Docker**
 
 1. Побудова образу Docker:
 ```bash
-docker build -t telecom-churn .
+docker build -t churn-prediction-app .
 ```
 2.  Запуск контейнера:
 ```bash
-pass
+docker run -p 8501:8501 churn-prediction-app
 ```
+3. Відкриття застосунку:
+Перейдіть в браузері за посиланням http://localhost:8501
+
 ## 📌 **Контакти**
  - GitHub Repository : https://github.com/Pasha0923/customer-churn-prediction_project
  - email : pavelsai2309@gmail.com

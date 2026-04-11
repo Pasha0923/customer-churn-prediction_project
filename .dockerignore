@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# notebook
+notebooks/
+
+# system files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
